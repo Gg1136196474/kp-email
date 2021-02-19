@@ -7,6 +7,7 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
+  <script src="http://rescdn.qqmail.com/node/ww/wwopenmng/js/sso/wwLogin-1.0.0.js"></script>
   <body>
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
@@ -14,4 +15,43 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
+  <script>
+    // 1 检测是否已经企业登录
+    testLoginState()
+
+    // 判断登录态 有code代表已经企业微信登录
+    function testLoginState () {
+      // 判断url是否有code
+      const urlCode = getQueryString('code')
+      // 把登录code存入缓存
+      if(urlCode) {
+        localStorage.setItem('code', urlCode)
+        return
+      }
+      // 判断缓存中是否有code
+      const localCode = localStorage.getItem('code')
+      if(localCode) return
+      // 去登陆
+      setLogin()
+    }
+
+    // 登录函数
+    function setLogin() {
+      window.WwLogin({
+        "id" : "app",  
+        "appid" : "ww2f0528c6536a7421",
+        "agentid" : "1000136",
+        "redirect_uri" :"http://carry666.com:8080"
+      });
+    }
+
+    // 判断url上是否有参数
+    function getQueryString(name) { 
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+      var l = decodeURI(window.location.search);
+      var r = l.substr(1).match(reg);
+      if (r != null) return unescape(r[2]);
+      return null;
+    }
+  </script>
 </html>
