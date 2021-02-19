@@ -13,21 +13,20 @@
         {{item.name}}
       </div>
       <!-- excel上传 -->
+      <input type="file">
       <el-upload
         class="upload-demo"
-        action="http://carry666.com:3000/uploadExcel"
-        :on-success="handleExcelSuccess"
+        action="http://carry666.com:3000/uploadBirthDayExcel"
       >
         <el-button size="small" type="primary">+员工生日信息</el-button>
       </el-upload>
       <el-upload
         class="upload-demo"
-        action="http://carry666.com:3000/uploadExcel"
-        :on-success="handleExcelSuccess"
+        action="http://carry666.com:3000/uploadAgeExcel"
       >
         <el-button size="small" type="primary">+员工司龄信息</el-button>
       </el-upload>
-      <el-button size="small" type="primary" @click="testSendMail">模拟发邮件</el-button>
+      <el-button size="small" type="primary" @click="testSendMail">生成邮件草稿</el-button>
     </el-main>
     <el-dialog
       title="编辑模板"
@@ -39,18 +38,7 @@
         <el-col :span="12">
           <el-form ref="form" :model="editTemp" label-width="100px">
             <input type="file" id="file" @change="handleAvatarSuccess">
-            <!-- <el-upload
-              class="upload-demo"
-              action="http://carry666.com:3000/uploadImg"
-              :on-success="handleAvatarSuccess"
-            >
-              <el-button size="small" type="primary">点击上传背景图片</el-button>
-            </el-upload> -->
             <el-form-item label="收件人位置">
-              <el-input type="number" v-model="editTemp.nameLeft"></el-input>
-              <el-input type="number" v-model="editTemp.nameTop"></el-input>
-            </el-form-item>
-            <el-form-item label="生日数量位置">
               <el-input type="number" v-model="editTemp.nameLeft"></el-input>
               <el-input type="number" v-model="editTemp.nameTop"></el-input>
             </el-form-item>
@@ -61,7 +49,6 @@
           <div v-html="editTemp.htmlStr"></div>
           <div id="email" :style="{position: 'relative',backgroundSize: '100% auto', backgroundRepeat: 'no-repeat',backgroundImage:'url(' + editTemp.imageUrl+')', minHeight: '100%', width: 'auto'}">
             <p :style="{position: 'absolute', color: '#fff', left: editTemp.nameLeft + '%', top: editTemp.nameTop + '%'}">收件人名称</p>
-            <p :style="{position: 'absolute', color: '#fff', left: editTemp.ageLeft + '%', top: editTemp.ageTop + '%'}">生日数量</p>
           </div>
         </el-col>
       </el-row>
@@ -148,7 +135,7 @@ export default {
       axios.get('http://carry666.com:3000/send')
         .then(() => {
           ElMessage.success({
-            message: '模拟邮件发送成功，请到测试邮箱查看',
+            message: '草稿设置成功，请稍后到测试邮箱草稿箱查看（耗时约10min）',
             type: 'success'
           });
         })
