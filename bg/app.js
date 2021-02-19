@@ -11,20 +11,29 @@ const FileReader = require('filereader')
 const Imap = require('imap');
 const mimemessage = require('mimemessage');
 app.use(cors()); // 开启跨域
-app.use(bodyParser()); // 获取请求参数
+// app.use(bodyParser()); // 获取请求参数
+app.use(koaBody({ // 设置上传文件相关
+    multipart: true,// 支持文件上传
+    formidable: {
+        maxFileSize: 200 * 1024 * 1024 // 设置上传文件大小最大限制，默认2M
+    }
+    }));
 
 // 发送生日邮件
-const sendMail = async (user, type) => {
-    if (type === 1) { // type 1 代表生日邮件
+const sendMail = async (user, isBirth) => {
+    let cc = '';
+    let str = '';
+    if (isBirth === 'true') { // isBirth true 代表是生日邮件
         // 确定模板内容
-        const str = templateList[0].htmlStr.replace('收件人名称', user['英文名'])
+        str = templateList[0].htmlStr.replace('收件人名称', user['英文名'])
         // 设置抄送人
-        const cc = await setCcRecipient(user)
+        cc = await setCcRecipient(user, isBirth)
     } else {
         // 确定模板内容
-        const str = templateList[0].htmlStr.replace('收件人名称', user['英文名'])
+        const age = user['司龄']
+        str = templateList[age].htmlStr.replace('收件人名称', user['英文名'])
         // 设置抄送人
-        const cc = await setCcRecipient(user)
+        cc = await setCcRecipient(user)
     }
     // 设置收件人
     const to = setRecipient(user)
@@ -53,36 +62,63 @@ const setRecipient = (user) => {
     return user.email
 }
 // 设置抄送人员
-const setCcRecipient = async (user) => {
+const setCcRecipient = async (user, isBirth) => {
     let ccList = []
     /**
      * 生日 默认抄送本组（最小）
      * 司龄 默认抄送 suri eileen crush
      */
     // 获取本组成员
-    const departmentId = user.department && user.department[0]
-    const {errcode, userlist} = await getGroup(departmentId, accessToken)
-    if (errcode === 0) {
-        ccList = userlist.map(u => u.email)
+    if (isBirth) {
+        const departmentId = user.department && user.department[0]
+        const {errcode, userlist} = await getGroup(departmentId, accessToken)
+        if (errcode === 0) {
+            ccList = userlist.map(u => u.email)
+        }
+    } else {
+        ccList = ['suri', 'eileen', 'crush'].map(u => u+'@21kunpeng.com')
     }
     return ccList
 }
 
-// 测试发邮件功能
+// 发送邮件到草稿箱
 const sendTestMail = (ctx) => {
-    usesMsg = [
-        // todo
-        {
-            '英文名':'carryzhang',
-            email: 'carryzhang@21kunpeng.com',
-            department: [183]
+    // 判断是否上传了用户信息
+    if (ctx.query.isBirth === 'true') {
+        if (!usesMsg || usesMsg.length === 0) {
+            ctx.body = {
+                errCode: 1,
+                errmsg: '请先上传员工生日信息'
+            }
+            return
         }
-    ]
-    ctx.body = usesMsg[0]
-    // 循环用户列表并设置草稿邮件
-    usesMsg.forEach(user => {
-        sendMail(user)
-    })
+        ctx.body = {
+            errCode: 0,
+            data: usesMsg[0]
+        }
+        // 循环用户列表并设置草稿邮件
+        usesMsg.forEach(user => {
+            sendMail(user, ctx.query.isBirth)
+        })
+        return
+    }
+    if (ctx.query.isBirth !== 'true') {
+        if ((!agesMsg || agesMsg.length === 0)) {
+            ctx.body = {
+                errCode: 1,
+                errmsg: '请先上传员工司龄信息'
+            }
+            return
+        }
+        ctx.body = {
+            errCode: 0,
+            data: agesMsg[0]
+        }
+        // 循环用户列表并设置草稿邮件
+        agesMsg.forEach(user => {
+            sendMail(user)
+        })
+    }
 }
 // 获取历史模板
 const getTemplateList = ctx => {
@@ -115,6 +151,8 @@ const uploadBirthDayExcel = async (ctx) => {
             msg: '上传数据成功',
             list: objs
         };
+        // 根据生日userId获取详细信息
+        setUserMsg(objs)
     } else {
         ctx.body = {
         status: true,
@@ -133,6 +171,8 @@ const uploadAgeExcel = async (ctx) => {
             msg: '上传数据成功',
             list: objs
         };
+        // 司龄信息直接存储
+        agesMsg = objs
     } else {
         ctx.body = {
             status: true,
@@ -235,7 +275,7 @@ let templateList = [
         ageLeft: 10,
         ageTop: 10,
         imageUrl: '',
-        htmlStr: '<div>888</div>'
+        htmlStr: ''
     },
     {
         name: '司龄1年模板',
@@ -245,7 +285,7 @@ let templateList = [
         ageLeft: 10,
         ageTop: 10,
         imageUrl: '',
-        htmlStr: '<div>888</div>'
+        htmlStr: ''
     },
     {
         name: '司龄2年模板',
@@ -255,7 +295,7 @@ let templateList = [
         ageLeft: 10,
         ageTop: 10,
         imageUrl: '',
-        htmlStr: '<div>888</div>'
+        htmlStr: ''
     },
     {
         name: '司龄3年模板',
@@ -265,7 +305,7 @@ let templateList = [
         ageLeft: 10,
         ageTop: 10,
         imageUrl: '',
-        htmlStr: '<div>888</div>'
+        htmlStr: ''
     },
     {
         name: '司龄4年模板',
@@ -275,7 +315,7 @@ let templateList = [
         ageLeft: 10,
         ageTop: 10,
         imageUrl: '',
-        htmlStr: '<div>888</div>'
+        htmlStr: ''
     },
     {
         name: '司龄5年模板',
@@ -285,7 +325,7 @@ let templateList = [
         ageLeft: 10,
         ageTop: 10,
         imageUrl: '',
-        htmlStr: '<div>888</div>'
+        htmlStr: ''
     },
     {
         name: '司龄6年模板',
@@ -295,7 +335,7 @@ let templateList = [
         ageLeft: 10,
         ageTop: 10,
         imageUrl: '',
-        htmlStr: '<div>888</div>'
+        htmlStr: ''
     },
     {
         name: '司龄7年模板',
@@ -305,7 +345,7 @@ let templateList = [
         ageLeft: 10,
         ageTop: 10,
         imageUrl: '',
-        htmlStr: '<div>888</div>'
+        htmlStr: ''
     },
     {
         name: '司龄8年模板',
@@ -315,7 +355,7 @@ let templateList = [
         ageLeft: 10,
         ageTop: 10,
         imageUrl: '',
-        htmlStr: '<div>888</div>'
+        htmlStr: ''
     },
     {
         name: '司龄9年模板',
@@ -325,7 +365,7 @@ let templateList = [
         ageLeft: 10,
         ageTop: 10,
         imageUrl: '',
-        htmlStr: '<div>888</div>'
+        htmlStr: ''
     },
     {
         name: '司龄10年模板',
@@ -335,7 +375,7 @@ let templateList = [
         ageLeft: 10,
         ageTop: 10,
         imageUrl: '',
-        htmlStr: '<div>888</div>'
+        htmlStr: ''
     },
     {
         name: '司龄11年模板',
@@ -345,19 +385,12 @@ let templateList = [
         ageLeft: 10,
         ageTop: 10,
         imageUrl: '',
-        htmlStr: '<div>888</div>'
+        htmlStr: ''
     },
 ]
 
 let service = require('./service/webAppService.js');
 let uploadExcelSrv = require('./service/uploadExcelSrv.js');
-
-app.use(koaBody({
-multipart: true,
-formidable: {
-    maxFileSize: 200 * 1024 * 1024 // 设置上传文件大小最大限制，默认2M
-}
-}));
 
 
 
@@ -366,7 +399,8 @@ imap.once('ready', () => {
     console.log('connect success')
 })
 
-let usesMsg = [] // 当前所有用户的信息
+let usesMsg = [] // 当前所有用户的生日信息
+let agesMsg = [] // 当前所有用户的司龄信息
 let accessToken = ''
 // 获取 access_token
 const getToken = async function (ctx, next) {

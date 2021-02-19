@@ -13,7 +13,6 @@
         {{item.name}}
       </div>
       <!-- excel上传 -->
-      <input type="file">
       <el-upload
         class="upload-demo"
         action="http://carry666.com:3000/uploadBirthDayExcel"
@@ -26,7 +25,8 @@
       >
         <el-button size="small" type="primary">+员工司龄信息</el-button>
       </el-upload>
-      <el-button size="small" type="primary" @click="testSendMail">生成邮件草稿</el-button>
+      <el-button size="small" type="primary" @click="testSendMail(true)">生成生日邮件草稿</el-button>
+      <el-button size="small" type="primary" @click="testSendMail">生成司龄邮件草稿</el-button>
     </el-main>
     <el-dialog
       title="编辑模板"
@@ -36,9 +36,9 @@
       <el-row :gutter="20">
         <!-- 上传背景图片，设置用户名位置和内容 -->
         <el-col :span="12">
-          <el-form ref="form" :model="editTemp" label-width="100px">
-            <input type="file" id="file" @change="handleAvatarSuccess">
-            <el-form-item label="收件人位置">
+          <el-form ref="form" :model="editTemp" label-width="150px">
+            <span>上传模板背景图片</span><input type="file" id="file" @change="handleAvatarSuccess">
+            <el-form-item label="收件人位置调整 %">
               <el-input type="number" v-model="editTemp.nameLeft"></el-input>
               <el-input type="number" v-model="editTemp.nameTop"></el-input>
             </el-form-item>
@@ -131,13 +131,21 @@ export default {
     getTemplateList()
     // 获取当前用户身份，通讯录信息
     // 发送邮件
-    const testSendMail = () => {
-      axios.get('http://carry666.com:3000/send')
-        .then(() => {
-          ElMessage.success({
-            message: '草稿设置成功，请稍后到测试邮箱草稿箱查看（耗时约10min）',
-            type: 'success'
-          });
+    const testSendMail = (isBirth='') => {
+      axios.get(`http://carry666.com:3000/send?isBirth=${isBirth}`)
+        .then(({data}) => {
+          const {errCode, errmsg} = data
+          if (errCode === 0) {
+            ElMessage.success({
+              message: '草稿设置成功，请稍后到测试邮箱草稿箱查看（耗时约10min）',
+              type: 'success'
+            });
+          } else {
+            ElMessage.error({
+              message: errmsg
+            });
+          }
+          
         })
         .catch(e => {
           console.log(e)

@@ -2,10 +2,9 @@
 const xlsx = require('xlsx');
 const fs = require('fs');
 const path = require('path');
-const downPath = path.resolve(__dirname, '../../fileUpload');
+const downPath = path.resolve(__dirname, '../../../fileUpload');
 
 async function getExcelObjs (ctx) {
-  console.log(ctx, ctx.request, ctx.request.body, 777)
   const file = ctx.request.files.file; // 获取上传文件
   const reader = fs.createReadStream(file.path); // 创建可读流
   const filePath = `${downPath}/${file.name}`;
