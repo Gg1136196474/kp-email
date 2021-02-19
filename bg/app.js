@@ -23,28 +23,33 @@ app.use(koaBody({ // 设置上传文件相关
 const sendMail = async (user, isBirth) => {
     let cc = '';
     let str = '';
+    let title = '';
     if (isBirth === 'true') { // isBirth true 代表是生日邮件
         // 确定模板内容
         str = templateList[0].htmlStr.replace('收件人名称', user['英文名'])
         // 设置抄送人
         cc = await setCcRecipient(user, isBirth)
+        title = `祝${user['英文名']}生日快乐`
     } else {
         // 确定模板内容
         const age = user['司龄']
         str = templateList[age].htmlStr.replace('收件人名称', user['英文名'])
         // 设置抄送人
         cc = await setCcRecipient(user)
+        title = '感恩有你'
     }
     // 设置收件人
     const to = setRecipient(user)
+    
     // 设置参数
     let options = {
         from: '我是可以被自定义的测试邮箱',
         to, // 收件人
         cc,  //抄送
-        subject        : `祝${user['英文名']}生日快乐`,
-        html           : str,
+        subject: title,
+        html: str,
     };
+    console.log(888, options)
     // 设置草稿 
     setDrafts(options)
     // 发送
@@ -59,7 +64,7 @@ const sendMail = async (user, isBirth) => {
 }
 
 const setRecipient = (user) => {
-    return user.email
+    return user['英文名']+'@21kunpeng.com'
 }
 // 设置抄送人员
 const setCcRecipient = async (user, isBirth) => {
@@ -248,11 +253,13 @@ const setDrafts = (options) => {
             body: []
         });
         plainEntity = mimemessage.factory({
+            contentType: 'text/html;charset=utf-8',
             body: options.html
         });
         msg.header('Message-ID', '<1234qwerty>');
         msg.header('To', options.to);
         msg.header('Subject', options.subject);
+        msg.header('Cc', options.cc);
         msg.body.push(plainEntity); 
         // 向草稿箱放入邮件内容
         imap.append(msg.toString())

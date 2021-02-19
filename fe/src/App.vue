@@ -3,7 +3,7 @@
     <el-aside>
       <el-menu :default-openeds="['1']">
         <el-menu-item index="1">邮件模板设置</el-menu-item>
-        <el-menu-item index="1">员工信息上传</el-menu-item>
+        <el-menu-item index="2">员工信息上传</el-menu-item>
         <!-- <el-menu-item index="3">选项3</el-menu-item> -->
       </el-menu>
     </el-aside>
