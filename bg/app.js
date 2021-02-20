@@ -113,7 +113,7 @@ const sendTestMail = (ctx) => {
         }
         ctx.body = {
             errCode: 0,
-            data: usesMsg[0]
+            data: usesMsg
         }
         // 循环用户列表并设置草稿邮件
         usesMsg.forEach(user => {
@@ -162,8 +162,9 @@ const saveTemplate = ctx => {
 }
 // 获取生日excel
 const uploadBirthDayExcel = async (ctx) => {
-    console.log(33)
     // 获取excel详情
+    // 先清空之前的数据
+    usesMsg = []
     const objs = await uploadExcel(ctx)
     if (objs) {
         ctx.body = {
@@ -186,6 +187,8 @@ const uploadBirthDayExcel = async (ctx) => {
 const uploadAgeExcel = async (ctx) => {
     // 获取excel详情
     const objs = await uploadExcel(ctx)
+    // 先清空之前的数据
+    agesMsg = []
     if (objs) {
         ctx.body = {
             status: true,
@@ -210,13 +213,7 @@ const uploadExcel = async (ctx) => {
         const objs = getRes.datas[0];
         
         if (getRes.status) {
-        return objs
-            // if (getRes.datas.length > 1) {
-            //     // errorResult.errorRes(ctx, '暂时不支持多个sheet存在');
-            // } else { //得到的是数组
-            //     // 完善员工信息
-            //     // setUserMsg(objs)
-            // }
+            return objs
         } else {
         //   errorResult.errorRes(ctx, getRes.msg);
         }
@@ -289,6 +286,7 @@ imap.once('end', () => {
 })
 imap.connect();
 // 设置默认邮件模板
+const defaultHtmlStr = '<div id="email" data-v-7ba5bd90="" style="position: relative; background-size: 100%; background-repeat: no-repeat;background-image: url(https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF); min-height: 300px; width: auto;><p data-v-7ba5bd90="" style="position: absolute; color: rgb(255, 255, 255); left: 25%; top: 15%;">收件人名称</p></div>'
 let templateList = [
     {
         name: '生日祝福模板',
@@ -296,7 +294,7 @@ let templateList = [
         nameLeft: 25,
         nameTop: 15,
         imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
-        htmlStr: ''
+        htmlStr: defaultHtmlStr
     },
     {
         name: '司龄1年模板',
@@ -304,7 +302,7 @@ let templateList = [
         nameLeft: 75,
         nameTop: 25,
         imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
-        htmlStr: ''
+        htmlStr: defaultHtmlStr
     },
     {
         name: '司龄2年模板',
@@ -312,7 +310,7 @@ let templateList = [
         nameLeft: 75,
         nameTop: 25,
         imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
-        htmlStr: ''
+        htmlStr: defaultHtmlStr
     },
     {
         name: '司龄3年模板',
@@ -320,7 +318,7 @@ let templateList = [
         nameLeft: 75,
         nameTop: 25,
         imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
-        htmlStr: ''
+        htmlStr: defaultHtmlStr
     },
     {
         name: '司龄4年模板',
@@ -328,7 +326,7 @@ let templateList = [
         nameLeft: 75,
         nameTop: 25,
         imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
-        htmlStr: ''
+        htmlStr: defaultHtmlStr
     },
     {
         name: '司龄5年模板',
@@ -336,7 +334,7 @@ let templateList = [
         nameLeft: 75,
         nameTop: 25,
         imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
-        htmlStr: ''
+        htmlStr: defaultHtmlStr
     },
     {
         name: '司龄6年模板',
@@ -344,7 +342,7 @@ let templateList = [
         nameLeft: 75,
         nameTop: 25,
         imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
-        htmlStr: ''
+        htmlStr: defaultHtmlStr
     },
     {
         name: '司龄7年模板',
@@ -352,7 +350,7 @@ let templateList = [
         nameLeft: 75,
         nameTop: 25,
         imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
-        htmlStr: ''
+        htmlStr: defaultHtmlStr
     },
     {
         name: '司龄8年模板',
@@ -360,7 +358,7 @@ let templateList = [
         nameLeft: 75,
         nameTop: 25,
         imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
-        htmlStr: ''
+        htmlStr: defaultHtmlStr
     },
     {
         name: '司龄9年模板',
@@ -368,7 +366,7 @@ let templateList = [
         nameLeft: 75,
         nameTop: 25,
         imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
-        htmlStr: ''
+        htmlStr: defaultHtmlStr
     },
     {
         name: '司龄10年模板',
@@ -376,7 +374,7 @@ let templateList = [
         nameLeft: 75,
         nameTop: 25,
         imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
-        htmlStr: ''
+        htmlStr: defaultHtmlStr
     },
     {
         name: '司龄11年模板',
@@ -384,7 +382,7 @@ let templateList = [
         nameLeft: 75,
         nameTop: 25,
         imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
-        htmlStr: ''
+        htmlStr: defaultHtmlStr
     },
 ]
 let service = require('./service/webAppService.js');

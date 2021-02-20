@@ -104,7 +104,7 @@ export default {
     const setTemplate = () => {
       dialogVisible.value = false
       // 设置模板字符串
-      editTemp.value.htmlStr = document.getElementById('email').innerHTML;
+      editTemp.value.htmlStr = document.getElementById('email').outerHTML;
       // 发送修改模板的请求
       axios.post('http://carry666.com:3000/saveTemplate', editTemp.value)
         .then(() => {
