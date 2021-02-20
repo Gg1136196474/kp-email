@@ -7,7 +7,7 @@
 由于企业微信权限原因，暂时只能给研发中心前端开发组发邮件，通过测试后，可联系guanguan开启全公司权限
 
 ### demo运行方法
-- 本地需要有node环境 没有需要下载 [点击下载]('https://nodejs.org/zh-cn/download/')
+- 本地需要有node环境 没有需要下载 [点击下载](https://nodejs.org/zh-cn/download/)
 - git clone https://github.com/18640905576/kp-email.git
 - 切换到master分支
 - cd fe
@@ -24,4 +24,4 @@
 
 ### 测试邮箱设置
 当前使用的是carryzhang@21kunpeng.com, 修改到其他邮箱需要开启邮箱验证码权限并联系carry修改代码配置
-【腾讯企业邮箱获取授权码修改教程】(https://www.yiyisoft.com/news/402.html)
+[腾讯企业邮箱获取授权码修改教程](https://www.yiyisoft.com/news/402.html)
