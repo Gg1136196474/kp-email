@@ -15,12 +15,14 @@
       <p>默认邮件模板为一张背景图，请务必先修改模板再生成邮件草稿，否则会生成默认格式的邮件</p>
       <el-upload
         class="upload-demo"
+        accept=".xls, .xlsx" 
         action="http://carry666.com:3000/uploadBirthDayExcel"
       >
         <el-button size="small" type="primary" icon="el-icon-edit">员工生日信息</el-button>
       </el-upload>
       <el-upload
         class="upload-demo"
+        accept=".xls, .xlsx" 
         action="http://carry666.com:3000/uploadAgeExcel"
       >
         <el-button size="small" type="primary" icon="el-icon-edit">员工司龄信息</el-button>
@@ -45,7 +47,7 @@
         <!-- 上传背景图片，设置用户名位置和内容 -->
         <el-col :span="12">
           <el-form ref="form" :model="editTemp" label-width="150px">
-            <span>上传模板背景图片</span><input type="file" id="file" @change="handleAvatarSuccess">
+            <span>上传模板背景图片</span><input type="file" accept="image/jpeg,image/gif,image/png" id="file" @change="handleAvatarSuccess">
             <el-form-item label="收件人位置调整 %">
               <el-input type="number" v-model="editTemp.nameLeft"></el-input>
               <el-input type="number" v-model="editTemp.nameTop"></el-input>
@@ -191,6 +193,6 @@ export default {
   height: 100%;
 }
 .el-button {
-  margin-bottom: 20px;
+  margin-top: 20px;
 }
 </style>
