@@ -2,12 +2,12 @@ const Koa = require('koa');
 const cors = require('koa2-cors');
 const app = new Koa();
 var _ = require('koa-route');
-const bodyParser = require('koa-bodyparser');
-const xlsx = require('xlsx');
+// const bodyParser = require('koa-bodyparser');
+// const xlsx = require('xlsx');
 const koaBody = require('koa-body');
 const {getAccessToken, getUserMsg, getGroup} = require('./service/sendserver.js');
 const nodemailer = require('nodemailer');
-const FileReader = require('filereader')
+// const FileReader = require('filereader')
 const Imap = require('imap');
 const mimemessage = require('mimemessage');
 app.use(cors()); // 开启跨域
@@ -17,7 +17,20 @@ app.use(koaBody({ // 设置上传文件相关
     formidable: {
         maxFileSize: 200 * 1024 * 1024 // 设置上传文件大小最大限制，默认2M
     }
-    }));
+}));
+let usesMsg = [] // 当前所有用户的生日信息
+let agesMsg = [] // 当前所有用户的司龄信息
+let accessToken = ''
+// 获取 access_token
+const getToken = async (ctx, next) => {
+    await getAccessToken().then(data => {
+        accessToken = data.access_token
+    }).catch(e => {
+        console.log(e)
+    })
+    await next()
+}
+app.use(getToken);
 
 // 发送生日邮件
 const sendMail = async (user, isBirth) => {
@@ -77,6 +90,7 @@ const setCcRecipient = async (user, isBirth) => {
     if (isBirth) {
         const departmentId = user.department && user.department[0]
         const {errcode, userlist} = await getGroup(departmentId, accessToken)
+        console.log(999, userlist)
         if (errcode === 0) {
             ccList = userlist.map(u => u.email)
         }
@@ -148,6 +162,7 @@ const saveTemplate = ctx => {
 }
 // 获取生日excel
 const uploadBirthDayExcel = async (ctx) => {
+    console.log(33)
     // 获取excel详情
     const objs = await uploadExcel(ctx)
     if (objs) {
@@ -167,6 +182,7 @@ const uploadBirthDayExcel = async (ctx) => {
     }
 }
 
+// 获取司龄excel
 const uploadAgeExcel = async (ctx) => {
     // 获取excel详情
     const objs = await uploadExcel(ctx)
@@ -211,15 +227,15 @@ const uploadExcel = async (ctx) => {
 };
 
 // 上传图片
-const uploadImg = async function (ctx, next) {
-    ctx.body='上传成功'
-};
+// const uploadImg = async function (ctx, next) {
+//     ctx.body='上传成功'
+// };
 
 app.use(_.get('/getTemplateList', getTemplateList))
 app.use(_.post('/uploadBirthDayExcel', uploadBirthDayExcel))
 app.use(_.post('/uploadAgeExcel', uploadAgeExcel))
 app.use(_.post('/saveTemplate', saveTemplate))
-app.use(_.post('/uploadImg', uploadImg))
+// app.use(_.post('/uploadImg', uploadImg))
 app.use(_.get('/send', sendTestMail))
 // 设置邮箱
 const mailTransport = nodemailer.createTransport({
@@ -277,125 +293,100 @@ let templateList = [
     {
         name: '生日祝福模板',
         id: -1,
-        nameLeft: 50,
-        nameTop: 25,
-        ageLeft: 10,
-        ageTop: 10,
+        nameLeft: 25,
+        nameTop: 15,
         imageUrl: '',
         htmlStr: ''
     },
     {
         name: '司龄1年模板',
         id: 1,
-        nameLeft: 50,
+        nameLeft: 75,
         nameTop: 25,
-        ageLeft: 10,
-        ageTop: 10,
         imageUrl: '',
         htmlStr: ''
     },
     {
         name: '司龄2年模板',
         id: 2,
-        nameLeft: 50,
+        nameLeft: 75,
         nameTop: 25,
-        ageLeft: 10,
-        ageTop: 10,
         imageUrl: '',
         htmlStr: ''
     },
     {
         name: '司龄3年模板',
         id: 3,
-        nameLeft: 50,
+        nameLeft: 75,
         nameTop: 25,
-        ageLeft: 10,
-        ageTop: 10,
         imageUrl: '',
         htmlStr: ''
     },
     {
         name: '司龄4年模板',
         id: 4,
-        nameLeft: 50,
+        nameLeft: 75,
         nameTop: 25,
-        ageLeft: 10,
-        ageTop: 10,
         imageUrl: '',
         htmlStr: ''
     },
     {
         name: '司龄5年模板',
         id: 5,
-        nameLeft: 50,
+        nameLeft: 75,
         nameTop: 25,
-        ageLeft: 10,
-        ageTop: 10,
         imageUrl: '',
         htmlStr: ''
     },
     {
         name: '司龄6年模板',
         id: 6,
-        nameLeft: 50,
+        nameLeft: 75,
         nameTop: 25,
-        ageLeft: 10,
-        ageTop: 10,
         imageUrl: '',
         htmlStr: ''
     },
     {
         name: '司龄7年模板',
         id: 7,
-        nameLeft: 50,
+        nameLeft: 75,
         nameTop: 25,
-        ageLeft: 10,
-        ageTop: 10,
         imageUrl: '',
         htmlStr: ''
     },
     {
         name: '司龄8年模板',
         id: 8,
-        nameLeft: 50,
+        nameLeft: 75,
         nameTop: 25,
-        ageLeft: 10,
-        ageTop: 10,
         imageUrl: '',
         htmlStr: ''
     },
     {
         name: '司龄9年模板',
         id: 9,
-        nameLeft: 50,
+        nameLeft: 75,
         nameTop: 25,
-        ageLeft: 10,
-        ageTop: 10,
         imageUrl: '',
         htmlStr: ''
     },
     {
         name: '司龄10年模板',
         id: 10,
-        nameLeft: 50,
+        nameLeft: 75,
         nameTop: 25,
-        ageLeft: 10,
-        ageTop: 10,
         imageUrl: '',
         htmlStr: ''
     },
     {
         name: '司龄11年模板',
         id: 11,
-        nameLeft: 50,
+        nameLeft: 75,
         nameTop: 25,
-        ageLeft: 10,
-        ageTop: 10,
         imageUrl: '',
         htmlStr: ''
     },
 ]
-
 let service = require('./service/webAppService.js');
 let uploadExcelSrv = require('./service/uploadExcelSrv.js');
 
@@ -406,29 +397,11 @@ imap.once('ready', () => {
     console.log('connect success')
 })
 
-let usesMsg = [] // 当前所有用户的生日信息
-let agesMsg = [] // 当前所有用户的司龄信息
-let accessToken = ''
-// 获取 access_token
-const getToken = async function (ctx, next) {
-    await getAccessToken().then(data => {
-        accessToken = data.access_token
-        next()
-    }).catch(e => {
-        next()
-    })
-}
-
-app.use(getToken);
-
-
-
-
 // 获取员工的详细信息并存储
 const setUserMsg = (list = []) => {
     // 循环获取excel中员工信息
     list.forEach(user => {
-        // userId为英文名 根据userId获取企业微信详细信息
+        // todo userId为英文名 根据userId获取企业微信详细信息
         getUserMsg(user['英文名'], accessToken).then(data => {
             // 合并用户的excel信息和企业微信信息
             usesMsg.push(Object.assign(user, data))

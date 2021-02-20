@@ -47,7 +47,7 @@
         <!-- 预览邮件 -->
         <el-col :span="12">
           <div v-html="editTemp.htmlStr"></div>
-          <div id="email" :style="{position: 'relative',backgroundSize: '100% auto', backgroundRepeat: 'no-repeat',backgroundImage:'url(' + editTemp.imageUrl+')', minHeight: '100%', width: 'auto'}">
+          <div id="email" :style="{position: 'relative',backgroundSize: '100% auto', backgroundRepeat: 'no-repeat',backgroundImage:'url(' + editTemp.imageUrl+')', minHeight: '300px', width: 'auto'}">
             <p :style="{position: 'absolute', color: '#fff', left: editTemp.nameLeft + '%', top: editTemp.nameTop + '%'}">收件人名称</p>
           </div>
         </el-col>
