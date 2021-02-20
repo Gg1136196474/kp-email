@@ -295,7 +295,7 @@ let templateList = [
         id: -1,
         nameLeft: 25,
         nameTop: 15,
-        imageUrl: '',
+        imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
         htmlStr: ''
     },
     {
@@ -303,7 +303,7 @@ let templateList = [
         id: 1,
         nameLeft: 75,
         nameTop: 25,
-        imageUrl: '',
+        imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
         htmlStr: ''
     },
     {
@@ -311,7 +311,7 @@ let templateList = [
         id: 2,
         nameLeft: 75,
         nameTop: 25,
-        imageUrl: '',
+        imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
         htmlStr: ''
     },
     {
@@ -319,7 +319,7 @@ let templateList = [
         id: 3,
         nameLeft: 75,
         nameTop: 25,
-        imageUrl: '',
+        imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
         htmlStr: ''
     },
     {
@@ -327,7 +327,7 @@ let templateList = [
         id: 4,
         nameLeft: 75,
         nameTop: 25,
-        imageUrl: '',
+        imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
         htmlStr: ''
     },
     {
@@ -335,7 +335,7 @@ let templateList = [
         id: 5,
         nameLeft: 75,
         nameTop: 25,
-        imageUrl: '',
+        imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
         htmlStr: ''
     },
     {
@@ -343,7 +343,7 @@ let templateList = [
         id: 6,
         nameLeft: 75,
         nameTop: 25,
-        imageUrl: '',
+        imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
         htmlStr: ''
     },
     {
@@ -351,7 +351,7 @@ let templateList = [
         id: 7,
         nameLeft: 75,
         nameTop: 25,
-        imageUrl: '',
+        imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
         htmlStr: ''
     },
     {
@@ -359,7 +359,7 @@ let templateList = [
         id: 8,
         nameLeft: 75,
         nameTop: 25,
-        imageUrl: '',
+        imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
         htmlStr: ''
     },
     {
@@ -367,7 +367,7 @@ let templateList = [
         id: 9,
         nameLeft: 75,
         nameTop: 25,
-        imageUrl: '',
+        imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
         htmlStr: ''
     },
     {
@@ -375,7 +375,7 @@ let templateList = [
         id: 10,
         nameLeft: 75,
         nameTop: 25,
-        imageUrl: '',
+        imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
         htmlStr: ''
     },
     {
@@ -383,7 +383,7 @@ let templateList = [
         id: 11,
         nameLeft: 75,
         nameTop: 25,
-        imageUrl: '',
+        imageUrl: 'https://t7.baidu.com/it/u=1297102096,3476971300&fm=193&f=GIF',
         htmlStr: ''
     },
 ]

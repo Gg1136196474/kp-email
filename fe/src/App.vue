@@ -1,32 +1,40 @@
 <template>
   <el-container>
     <el-aside>
-      <el-menu :default-openeds="['1']">
-        <el-menu-item index="1">邮件模板设置</el-menu-item>
-        <el-menu-item index="2">员工信息上传</el-menu-item>
+      <el-menu :default-active="1">
+        <el-menu-item index="1" @click="activeIndex=1">员工信息上传</el-menu-item>
+        <el-menu-item index="2" @click="activeIndex=2">邮件模板设置</el-menu-item>
         <!-- <el-menu-item index="3">选项3</el-menu-item> -->
       </el-menu>
     </el-aside>
-    <el-main>
-      <!-- email template -->
-      <div class="temp_container" v-for="(item, index) in templateList" :key="index" @click="editTemplate(item)">
-        {{item.name}}
-      </div>
-      <!-- excel上传 -->
+    <!-- excel上传 -->
+    <el-main v-show="activeIndex === 1">
+      <!-- 引导语 -->
+      <p>hello</p>
+      <p>欢迎使用世纪鲲鹏邮件系统，请先上传生日excel和员工司龄excel</p>
+      <p>默认邮件模板为一张背景图，请务必先修改模板再生成邮件草稿，否则会生成默认格式的邮件</p>
       <el-upload
         class="upload-demo"
         action="http://carry666.com:3000/uploadBirthDayExcel"
       >
-        <el-button size="small" type="primary">+员工生日信息</el-button>
+        <el-button size="small" type="primary" icon="el-icon-edit">员工生日信息</el-button>
       </el-upload>
       <el-upload
         class="upload-demo"
         action="http://carry666.com:3000/uploadAgeExcel"
       >
-        <el-button size="small" type="primary">+员工司龄信息</el-button>
+        <el-button size="small" type="primary" icon="el-icon-edit">员工司龄信息</el-button>
       </el-upload>
-      <el-button size="small" type="primary" @click="testSendMail(true)">生成生日邮件草稿</el-button>
-      <el-button size="small" type="primary" @click="testSendMail">生成司龄邮件草稿</el-button>
+      <el-button-group>
+        <el-button type="primary" palin round @click="testSendMail(true)">生成生日邮件草稿</el-button>
+        <el-button type="primary" palin round @click="testSendMail">生成司龄邮件草稿</el-button>
+      </el-button-group>
+    </el-main>
+    <!-- email template -->
+    <el-main v-show="activeIndex === 2">
+      <div class="temp_container" v-for="(item, index) in templateList" :key="index" @click="editTemplate(item)">
+        {{item.name}}
+      </div>
     </el-main>
     <el-dialog
       title="编辑模板"
@@ -75,10 +83,12 @@ export default {
     // HelloWorld
   },
   setup() {
-    // 解析excel文件
-    const handleExcelSuccess = () => {
-      // 员工信息存储
-    }
+    // // 解析excel文件
+    // const handleExcelSuccess = () => {
+    //   // 员工信息存储
+    // }
+    // 设置当前内容
+    let activeIndex = ref(1)
     // 设置邮件模板
     let dialogVisible = ref(false)
     let editTemp = ref({})
@@ -152,13 +162,14 @@ export default {
         })
     }
     return {
+      activeIndex,
       dialogVisible,
       editTemp,
       editTemplate,
       setTemplate,
       templateList,
       handleAvatarSuccess,
-      handleExcelSuccess,
+      // handleExcelSuccess,
       testSendMail,
     }
   }
@@ -174,6 +185,12 @@ export default {
   height: 50px;
   line-height: 50px;
   border: 1px solid #333;
+  margin-bottom: 20px;
+}
+.el-menu{
+  height: 100%;
+}
+.el-button {
   margin-bottom: 20px;
 }
 </style>
